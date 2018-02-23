@@ -20,7 +20,8 @@ def inJupyter(): # see if we are running in an iPython or Jupyter notebook
     else:
         return True
 
-def eSummary(qryStr):
+def eSummary(qryStr, max_to_show = -1):
+    global rec # only so we can inspect value (eg keys) later in a Jupyter notebook
     handle = Entrez.esearch(db="nucleotide", term=qryStr, retmax=10000)
     record = Entrez.read(handle)
     numIDs = int(record["Count"])
@@ -28,8 +29,10 @@ def eSummary(qryStr):
     if numIDs < 1:
         sys.exit(0)
 
-    if inNoteBook and numIDs > maxToShow: # while testing limit to maxToShow
-        numIDs = maxToShow
+    if inJupyter() and max_to_show==-1: max_to_show = max_jupyter_recs
+
+    if max_to_show > 0 and numIDs > max_to_show: # limit to max_to_show
+        numIDs = max_to_show
 
     id_list = record["IdList"]
     id_list.sort()
@@ -49,16 +52,19 @@ def eSummary(qryStr):
         startIx += sliceSize
         
 def usage():
-    sys.stderr.write("Usage: esummary.py \"query_str\"\n   Ex: esummary.py \"Strix[Title] AND mitochondrial[Title]\"\n");
+    sys.stderr.write('''
+Usage: esummary.py \"query_str\"
+    Ex: esummary.py \"Strix[Title] AND mitochondrial[Title]\"
+    
+''')
     sys.exit(0)
 
-# set vars that allow us to run in Jupyter notebook or from command line file
-inNoteBook = inJupyter()
-if inNoteBook:
-    maxToShow = 25
+# if we are in Jupyter notebook, run an example query and limit output to 25 records
+if inJupyter():
     qryStr = "Strix[Title] AND mitochondrion[Title]"
     #qryStr = "1246431282 1246431296 523582230"
     #qryStr = "KC953095 MF431746 MF431745 KU365899 MF001440"
+    max_jupyter_recs = 25 # only show up to 25 results if using in Jupyter
 elif __name__ == "__main__": # execute only if run as a script
     if len(sys.argv) < 2:
         usage()
