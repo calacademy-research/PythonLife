@@ -20,8 +20,8 @@ def inJupyter(): # see if we are running in an iPython or Jupyter notebook
     else:
         return True
 
-def eSummary(qryStr, max_to_show = -1):
-    global rec # only so we can inspect value (eg keys) later in a Jupyter notebook
+def eSummary(qryStr, return_accns = False, max_to_show = -1):
+    global rec # only so we can inspect it (eg keys) later in a Jupyter notebook
     handle = Entrez.esearch(db="nucleotide", term=qryStr, retmax=10000)
     record = Entrez.read(handle)
     numIDs = int(record["Count"])
@@ -37,7 +37,8 @@ def eSummary(qryStr, max_to_show = -1):
     id_list = record["IdList"]
     id_list.sort()
 
-    print "Accn | TaxonID | Length | Title"
+    found_accns = [] # list containing the found accession numbers
+    if not return_accns: print "Accn | TaxonID | Length | Title"
     startIx = 0; sliceSize = min(numIDs,200) # can't send too large a request at a time, so cut it up into this size slices
     while numIDs > 0:
         ids = ",".join( id_list[startIx : startIx+sliceSize] )
@@ -46,10 +47,17 @@ def eSummary(qryStr, max_to_show = -1):
         records = Entrez.read(handle)
 
         for rec in records:
-            print rec['Caption'], '|', rec['TaxId'], '|', rec['Length'], '|', rec['Title']
+            Accn = rec['Caption']
+            if not return_accns:
+                print Accn, '|', rec['TaxId'], '|', rec['Length'], '|', rec['Title']
+            else:
+                found_accns.append(Accn)
 
         numIDs  -= sliceSize
         startIx += sliceSize
+
+    if return_accns:
+        return found_accns
         
 def usage():
     sys.stderr.write('''
