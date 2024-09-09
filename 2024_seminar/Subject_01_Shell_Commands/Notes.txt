@@ -1,0 +1,21 @@
+**For each class we need**
+
+List of skills that we assume a person is coming in with for each class -->
+
+For UNIX shell class we assume --> Student has access to a terminal window
+
+All other classes we assume --> Student understands basic terminal work and has used Jupyter notebook before
+
+**Speaker Notes**
+
+Python Usefulness:
+
+These are just some of the uses of Python for scientists, but again this course is not actually about Python because understanding the terminal is essential to getting started in any type of code writing.
+
+Please check our course schedule for upcoming classwork about Python and remember that there are many good computer and mobile applications for learning these topics on your own if you are eager to gain a better understanding sooner.
+
+That said, we will get started with some installations that will allow us to use Python to use Jupyter notebooks to begin learning the terminal. Let anyone know if you are having trouble installing the programs in the link below.
+
+Lots of Commands:
+
+Let us stop to note here that we are learning a lot of terminal commands, and you should not expect to learn all of them immediately, but the more you practice using them, the faster you will be able to navigate your files without ever having to open a file explorer / finder window.
